@@ -4,7 +4,19 @@
       <nav class="navbar">
         <h3 @click="fetchTopNews">World News</h3> 
       </nav>
-      <button @click="SavedNews" class="saved_news"> Saved News </button>
+      <div class="location">
+        <div class="sel_option">
+        <b>Location:</b>
+        <select id="location" @change="fetchLocation">
+          <option value="ng"> Nigeria </option>
+          <option value="us"> USA </option>
+          <option value="gb"> UK </option>
+          <option value="de"> Germany </option>
+          <option value="fr"> France </option>
+        </select>  
+        </div>
+        <button @click="SavedNews" class="saved_news"> Saved News </button>
+      </div>
       <div class="searchbar">
       <li> 
         <form @submit.prevent="fetchSearchNews">
@@ -17,9 +29,9 @@
     </div>
 
     <div class="categories">
+      <li> <button id="General" @click="fetchCateNews('General')">General</button> </li>
       <li> <button id="business" @click="fetchCateNews('business')">Business</button> </li>
       <li> <button id="Entertainment" @click="fetchCateNews('Entertainment')">Entertainment</button> </li>
-      <li> <button id="General" @click="fetchCateNews('General')">General</button> </li>
       <li> <button id="Sports" @click="fetchCateNews('Sports')">Sports</button> </li>
       <li> <button id="Technology" @click="fetchCateNews('Technology')">Technology</button> </li>
       <li> <button id="Science" @click="fetchCateNews('Science')">Science</button> </li>
@@ -105,6 +117,18 @@ export default {
     fetchTopNews(){
       this.apiUrl = 'https://newsapi.org/v2/top-headlines?country=' 
       + this.country + '&pageSize=' + this.maxPerPage +
+      '&apiKey=' + this.apiKey;
+      this.isBusy = true;
+      this.searchword = '';
+      this.viewSource = '';
+
+      this.resetData();
+      this.fetchData(this.currentPage);
+    },
+    fetchLocation(){
+      let country = document.getElementById('location').value;
+      this.apiUrl = 'https://newsapi.org/v2/top-headlines?country=' 
+      + country + '&pageSize=' + this.maxPerPage +
       '&apiKey=' + this.apiKey;
       this.isBusy = true;
       this.searchword = '';
@@ -230,6 +254,16 @@ body{
     font-size:30px;
     color:white;
     cursor: pointer;
+  }
+  .location select{
+    padding:5px 10px;
+    border:1px solid #3385ff;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .location option{
+    background: #3385ff;
+    color: white;
   }
 .saved_news{
     float: right;
@@ -359,6 +393,9 @@ body{
     }
     .saved_news{
       float: unset;
+    }
+    .sel_option{
+      float: right;
     }
     .art_title{
       padding: 5px;
